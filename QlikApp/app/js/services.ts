@@ -92,6 +92,22 @@ class MessageService implements qlik.IMessageService {
 		return deferred.promise;
 	}
 
+	get(id: number): ng.IPromise<qlik.IMessageDetail> {
+		var deferred = this.$q.defer<qlik.IMessageDetail>();
+
+		var url = id.toString();
+		this.api.get(url)
+			.then((result: any) => {
+				var message: qlik.IMessageDetail = <qlik.IMessageDetail>result;
+				deferred.resolve(message);
+			})
+			.catch((reason: any) => {
+				deferred.reject(reason);
+			});
+
+		return deferred.promise;
+	}
+
 	create(message: IMessage): ng.IPromise<qlik.IMessage> {
 		var deferred = this.$q.defer<qlik.IMessage>();
 

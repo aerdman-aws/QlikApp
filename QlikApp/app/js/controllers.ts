@@ -4,11 +4,13 @@
 'use strict';
 
 import IMessage = qlik.IMessage;
+import IMessageDetail = qlik.IMessageDetail;
 import IMessageService = qlik.IMessageService;
 
 /* Controllers */
 interface IMessagePaneController {
-
+	loadDetails(id: number): void;
+	deleteMessage(id: number): void;
 }
 
 interface IMessagePaneScope extends ng.IScope {
@@ -34,6 +36,12 @@ class MessagePaneController implements IMessagePaneController {
 
 		messageService.getAll().then((messages: IMessage[]) => {
 			$scope.messages = messages;
+		});
+	}
+
+	loadDetails(id: number): void {
+		this.messageService.get(id).then((messageDetail: IMessageDetail) => {
+			alert(messageDetail.Message.Body + ' is ' + (!messageDetail.IsPalindrome ? 'not ' : '') + 'a palindrome');
 		});
 	}
 

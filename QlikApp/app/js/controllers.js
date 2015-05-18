@@ -10,6 +10,11 @@ var MessagePaneController = (function () {
             $scope.messages = messages;
         });
     }
+    MessagePaneController.prototype.loadDetails = function (id) {
+        this.messageService.get(id).then(function (messageDetail) {
+            alert(messageDetail.Message.Body + ' is ' + (!messageDetail.IsPalindrome ? 'not ' : '') + 'a palindrome');
+        });
+    };
     MessagePaneController.prototype.deleteMessage = function (id) {
         this.messageService.delete(id);
     };

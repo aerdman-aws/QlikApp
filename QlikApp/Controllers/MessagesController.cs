@@ -29,7 +29,9 @@ namespace QlikApp.Controllers
             {
                 return NotFound();
             }
-            return Ok(message);
+
+            var messageDetail = new MessageDetail(message);
+            return Ok(messageDetail);
         }
 
         public HttpResponseMessage Post([FromBody] Message data)

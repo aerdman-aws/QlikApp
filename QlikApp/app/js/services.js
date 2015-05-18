@@ -70,6 +70,17 @@ var MessageService = (function () {
         });
         return deferred.promise;
     };
+    MessageService.prototype.get = function (id) {
+        var deferred = this.$q.defer();
+        var url = id.toString();
+        this.api.get(url).then(function (result) {
+            var message = result;
+            deferred.resolve(message);
+        }).catch(function (reason) {
+            deferred.reject(reason);
+        });
+        return deferred.promise;
+    };
     MessageService.prototype.create = function (message) {
         var deferred = this.$q.defer();
         var url = '';
