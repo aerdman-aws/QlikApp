@@ -3,6 +3,32 @@
 
 'use strict';
 
-/* Controllers */
+import IMessage = qlik.IMessage;
+import IMessageService = qlik.IMessageService;
 
-angular.module('qlik.controllers', []);
+/* Controllers */
+interface IMessagePaneController {
+
+}
+
+interface IMessagePaneScope extends ng.IScope {
+	controller: IMessagePaneController;
+
+	messages: IMessage[];
+}
+
+class MessagePaneController implements IMessagePaneController {
+	static $inject = ['$scope', 'messageService'];
+	constructor(private $scope: IMessagePaneScope, private messageService: IMessageService) {
+		$scope.controller = this;
+
+		messageService.getAll().then((messages: IMessage[]) => {
+			$scope.messages = messages;
+		});
+	}
+	
+}
+
+
+angular.module('qlik.controllers', [])
+	.controller('MessagePaneController', MessagePaneController);

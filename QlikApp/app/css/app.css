@@ -1,2 +1,21 @@
-﻿.qlik-footer {
-  font-size: 12px; }
+﻿.messagePane {
+  width: 600px;
+  padding: 10px;
+  background-color: #bedeed; }
+  .messagePane .container {
+    width: 100%; }
+    .messagePane .container .message {
+      margin: 10px;
+      padding: 5px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      background-color: #c3e3c8; }
+      .messagePane .container .message:hover {
+        background-color: #a0d3a8; }
+      .messagePane .container .message .id {
+        font-size: 12px;
+        text-align: right; }
+
+.footer {
+  margin-top: 15px;
+  font-size: 10px; }
