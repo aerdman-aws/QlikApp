@@ -106,6 +106,7 @@
     <Content Include="app\js\controllers.js.map" />
     <Content Include="app\js\directives.js.map" />
     <Content Include="app\js\services.js.map" />
+    <None Include="Properties\PublishProfiles\FileSystem.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
