@@ -10,6 +10,9 @@ var MessagePaneController = (function () {
             $scope.messages = messages;
         });
     }
+    MessagePaneController.prototype.deleteMessage = function (id) {
+        this.messageService.delete(id);
+    };
     MessagePaneController.$inject = ['$scope', 'messageService'];
     return MessagePaneController;
 })();
@@ -19,7 +22,7 @@ var MessagePosterController = (function () {
         this.messageService = messageService;
         $scope.controller = this;
         $scope.message = {
-            Id: '',
+            Id: 0,
             Body: ''
         };
     }

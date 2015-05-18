@@ -36,6 +36,20 @@ var MessageApiService = (function () {
         });
         return deferred.promise;
     };
+    MessageApiService.prototype.delete = function (apiUrl) {
+        var _this = this;
+        var deferred = this.$q.defer();
+        var url = '../api/messages/' + apiUrl;
+        this.$log.debug('Request: ', url);
+        this.$http.delete(url).success(function (data, status, headers, config) {
+            _this.$log.debug('Response: ', data);
+            deferred.resolve(data);
+        }).error(function (data, status, headers, config) {
+            _this.$log.error('Error: ', data);
+            deferred.reject(data);
+        });
+        return deferred.promise;
+    };
     MessageApiService.$inject = ['$http', '$q', '$log'];
     return MessageApiService;
 })();
@@ -65,6 +79,18 @@ var MessageService = (function () {
         }).catch(function (reason) {
             deferred.reject(reason);
         });
+        return deferred.promise;
+    };
+    MessageService.prototype.delete = function (id) {
+        var deferred = this.$q.defer();
+        var url = id.toString();
+        this.api.delete(url).then(function (result) {
+            var message = result;
+            deferred.resolve(message);
+        }).catch(function (reason) {
+            deferred.reject(reason);
+        });
+        deferred.resolve(null);
         return deferred.promise;
     };
     MessageService.$inject = ['$q', '$log', 'messageApiService'];

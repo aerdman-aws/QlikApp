@@ -2,6 +2,7 @@
     <div class="header">Messages</div>
     <div class="container">
         <div class="message" ng-repeat="message in messages">
+            <div class="delete" ng-click="controller.deleteMessage(message.Id)"></div>
             <div class="body">{{message.Body}}</div>
             <div class="id">Message #{{message.Id}}</div>
         </div>

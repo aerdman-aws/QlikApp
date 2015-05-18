@@ -12,9 +12,15 @@
       background-color: #c3e3c8; }
       .messagePane .container .message:hover {
         background-color: #a0d3a8; }
+        .messagePane .container .message:hover .delete:after {
+          content: "X"; }
       .messagePane .container .message .id {
         font-size: 12px;
         text-align: right; }
+      .messagePane .container .message .delete {
+        display: inline;
+        float: right;
+        clear: both; }
 
 .messagePoster {
   width: 600px;
@@ -28,6 +34,6 @@
     .messagePoster .container TEXTAREA {
       width: 95%; }
 
-.footer {
+BODY > .footer {
   margin-top: 15px;
   font-size: 10px; }

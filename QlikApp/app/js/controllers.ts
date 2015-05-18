@@ -36,7 +36,10 @@ class MessagePaneController implements IMessagePaneController {
 			$scope.messages = messages;
 		});
 	}
-	
+
+	deleteMessage(id: number): void {
+		this.messageService.delete(id);
+	}
 }
 
 class MessagePosterController implements IMessagePosterController {
@@ -45,7 +48,7 @@ class MessagePosterController implements IMessagePosterController {
 		$scope.controller = this;
 
 		$scope.message = {
-			Id: '',
+			Id: 0,
 			Body: ''
 		};
 	}

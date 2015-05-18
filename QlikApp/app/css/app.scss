@@ -20,11 +20,23 @@ $green: rgb(195, 227, 200);
 
             &:hover {
                 background-color: darken($green, 10%);
+
+                .delete {
+                    &:after {
+                        content: "X";
+                    }
+                }
             }
 
             .id {
                 font-size: 12px;
                 text-align: right;
+            }
+
+            .delete {
+                display: inline;
+                float: right;
+                clear: both;
             }
         }
     }
@@ -53,7 +65,7 @@ $green: rgb(195, 227, 200);
 }
 
 
-.footer {
+BODY > .footer {
     margin-top: 15px;
     font-size: 10px;
 }

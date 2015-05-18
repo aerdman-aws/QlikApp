@@ -49,6 +49,26 @@ class MessageApiService implements qlik.IMessageApiService {
 
 		return deferred.promise;
 	}
+
+	delete(apiUrl: string): ng.IPromise<any> {
+		var deferred = this.$q.defer<any>();
+
+		var url: string = '../api/messages/' + apiUrl;
+
+		this.$log.debug('Request: ', url);
+
+		this.$http.delete(url)
+			.success((data: any, status: number, headers: ng.IHttpHeadersGetter, config: ng.IRequestConfig): void => {
+				this.$log.debug('Response: ', data);
+				deferred.resolve(data);
+			})
+			.error((data: any, status: number, headers: ng.IHttpHeadersGetter, config: ng.IRequestConfig): void => {
+				this.$log.error('Error: ', data);
+				deferred.reject(data);
+			});
+
+		return deferred.promise;
+	}
 }
 
 class MessageService implements qlik.IMessageService {
@@ -84,6 +104,24 @@ class MessageService implements qlik.IMessageService {
 			.catch((reason: any) => {
 				deferred.reject(reason);
 			});
+
+		return deferred.promise;
+	}
+
+	delete(id: number): ng.IPromise<qlik.IMessage> {
+		var deferred = this.$q.defer<qlik.IMessage>();
+
+		var url = id.toString();
+		this.api.delete(url)
+			.then((result: any) => {
+				var message: IMessage = <qlik.IMessage>result;
+				deferred.resolve(message);
+			})
+			.catch((reason: any) => {
+				deferred.reject(reason);
+			});
+
+		deferred.resolve(null);
 
 		return deferred.promise;
 	}
