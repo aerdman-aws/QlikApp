@@ -7,16 +7,27 @@
 
 class MessagePaneDirective implements ng.IDirective {
 	static $inject = [];
-	constructor() { }
+	constructor() {}
 
-	scope = { };
+	scope = {};
 
 	templateUrl = './partials/messagePane.html';
 	controller = 'MessagePaneController';
 };
 
+class MessagePosterDirective implements ng.IDirective {
+	static $inject = [];
+	constructor() {}
+
+	scope = {};
+
+	templateUrl = './partials/messagePoster.html';
+	controller = 'MessagePosterController';
+};
+
 angular.module('qlik.directives', [])
 	.directive('qlikMessagePane', () => new MessagePaneDirective())
+	.directive('qlikMessagePoster', () => new MessagePosterDirective())
 	.directive('appVersion', ['version', function (version) {
 		return function (scope, elm, attrs) {
 			elm.text(version);

@@ -16,6 +16,18 @@
         font-size: 12px;
         text-align: right; }
 
+.messagePoster {
+  width: 600px;
+  padding: 10px;
+  background-color: #bedeed; }
+  .messagePoster .header {
+    margin-bottom: 10px; }
+  .messagePoster .container {
+    width: 100%;
+    padding: 0 10px; }
+    .messagePoster .container TEXTAREA {
+      width: 95%; }
+
 .footer {
   margin-top: 15px;
   font-size: 10px; }

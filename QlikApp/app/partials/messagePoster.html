@@ -1,0 +1,12 @@
+﻿<div class="messagePoster">
+    <div class="header">Post a new message</div>
+    <div class="container">
+        <div>
+            <textarea type="text" rows="3" ng-model="message.Body"></textarea>
+        </div>
+        <div>
+            <input type="button" value="Post Message" ng-click="controller.postMessage()" />
+            <input type="button" value="Clear" ng-click="controller.clearMessage()" />
+        </div>
+    </div>
+</div>

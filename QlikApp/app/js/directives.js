@@ -12,7 +12,17 @@ var MessagePaneDirective = (function () {
     return MessagePaneDirective;
 })();
 ;
-angular.module('qlik.directives', []).directive('qlikMessagePane', function () { return new MessagePaneDirective(); }).directive('appVersion', ['version', function (version) {
+var MessagePosterDirective = (function () {
+    function MessagePosterDirective() {
+        this.scope = {};
+        this.templateUrl = './partials/messagePoster.html';
+        this.controller = 'MessagePosterController';
+    }
+    MessagePosterDirective.$inject = [];
+    return MessagePosterDirective;
+})();
+;
+angular.module('qlik.directives', []).directive('qlikMessagePane', function () { return new MessagePaneDirective(); }).directive('qlikMessagePoster', function () { return new MessagePosterDirective(); }).directive('appVersion', ['version', function (version) {
     return function (scope, elm, attrs) {
         elm.text(version);
     };

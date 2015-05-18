@@ -82,6 +82,7 @@
     <Content Include="app\js\controllers.js" />
     <Content Include="app\js\directives.js" />
     <Content Include="app\js\services.js" />
+    <Content Include="app\partials\messagePoster.html" />
     <Content Include="app\partials\messagePane.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\angular.js" />

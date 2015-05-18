@@ -13,5 +13,25 @@ var MessagePaneController = (function () {
     MessagePaneController.$inject = ['$scope', 'messageService'];
     return MessagePaneController;
 })();
-angular.module('qlik.controllers', []).controller('MessagePaneController', MessagePaneController);
+var MessagePosterController = (function () {
+    function MessagePosterController($scope, messageService) {
+        this.$scope = $scope;
+        this.messageService = messageService;
+        $scope.controller = this;
+        $scope.message = {
+            Id: '',
+            Body: ''
+        };
+    }
+    MessagePosterController.prototype.postMessage = function () {
+        this.messageService.create(this.$scope.message);
+        this.clearMessage(); //temp
+    };
+    MessagePosterController.prototype.clearMessage = function () {
+        this.$scope.message.Body = '';
+    };
+    MessagePosterController.$inject = ['$scope', 'messageService'];
+    return MessagePosterController;
+})();
+angular.module('qlik.controllers', []).controller('MessagePaneController', MessagePaneController).controller('MessagePosterController', MessagePosterController);
 //# sourceMappingURL=controllers.js.map

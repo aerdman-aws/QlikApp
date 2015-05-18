@@ -30,6 +30,28 @@ $green: rgb(195, 227, 200);
     }
 }
 
+.messagePoster {
+    width: 600px;
+    padding: 10px;
+
+    background-color: $blue;
+
+    .header {
+        margin-bottom: 10px;
+    }
+    .container {
+        width: 100%;
+        padding: 0 10px;
+
+        TEXTAREA {
+            width: 95%;
+        }
+
+        INPUT[type="button"] {
+        }
+    }
+}
+
 
 .footer {
     margin-top: 15px;
