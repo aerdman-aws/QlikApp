@@ -31,8 +31,18 @@ class MessagePaneController implements IMessagePaneController {
 	constructor(private $scope: IMessagePaneScope, private messageService: qlik.IMessageService) {
 		$scope.controller = this;
 
-		messageService.getAll().then((messages: qlik.IMessage[]) => {
-			$scope.messages = messages;
+		this.loadMessages();
+
+		$scope.$watch('controller.messageService.isDirty', (newValue: boolean, oldValue: boolean): void => {
+			if (!oldValue && newValue) { //if message collection wasn't dirty, but now is dirty...
+				this.loadMessages(); //... reload the messages
+			}
+		});
+	}
+
+	private loadMessages(): void {
+		this.messageService.getAll().then((messages: qlik.IMessage[]) => {
+			this.$scope.messages = messages;
 		});
 	}
 

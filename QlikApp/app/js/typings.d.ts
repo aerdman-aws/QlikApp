@@ -16,6 +16,8 @@
 	}
 
 	interface IMessageService {
+		isDirty: boolean;
+
 		getAll(): ng.IPromise<IMessage[]>;
 		get(id: number): ng.IPromise<qlik.IMessageDetail>;
 		create(message: IMessage): ng.IPromise<qlik.IMessage>;

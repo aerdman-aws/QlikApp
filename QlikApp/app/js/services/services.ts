@@ -74,7 +74,10 @@ class MessageApiService implements qlik.IMessageApiService {
 class MessageService implements qlik.IMessageService {
 	static $inject = ['$q', '$log', 'messageApiService'];
 	constructor(private $q: ng.IQService, private $log: ng.ILogService, private api: qlik.IMessageApiService) {
+		this.isDirty = true;
 	}
+
+	isDirty: boolean;
 
 	getAll(): ng.IPromise<qlik.IMessage[]> {
 		var deferred = this.$q.defer<qlik.IMessage[]>();
@@ -82,6 +85,7 @@ class MessageService implements qlik.IMessageService {
 		var url = '';
 		this.api.get(url)
 			.then((result: any) => {
+				this.isDirty = false;
 				var messages: qlik.IMessage[] = <qlik.IMessage[]>result;
 				deferred.resolve(messages);
 			})
@@ -114,6 +118,7 @@ class MessageService implements qlik.IMessageService {
 		var url = '';
 		this.api.post(url, { Id: message.Id, Body: message.Body })
 			.then((result: any) => {
+				this.isDirty = true;
 				var message: qlik.IMessage = <qlik.IMessage>result;
 				deferred.resolve(message);
 			})
@@ -130,6 +135,7 @@ class MessageService implements qlik.IMessageService {
 		var url = id.toString();
 		this.api.delete(url)
 			.then((result: any) => {
+				this.isDirty = true;
 				var message: qlik.IMessage = <qlik.IMessage>result;
 				deferred.resolve(message);
 			})

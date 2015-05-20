@@ -13,7 +13,8 @@
       .messagePane .container .message:hover {
         background-color: #a0d3a8; }
         .messagePane .container .message:hover .delete:after {
-          content: "X"; }
+          content: "X";
+          color: red; }
       .messagePane .container .message .id {
         font-size: 12px;
         text-align: right; }

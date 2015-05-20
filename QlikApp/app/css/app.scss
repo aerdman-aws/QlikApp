@@ -24,6 +24,7 @@ $green: rgb(195, 227, 200);
                 .delete {
                     &:after {
                         content: "X";
+                        color: red;
                     }
                 }
             }
