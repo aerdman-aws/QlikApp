@@ -6,6 +6,11 @@
 // Declare app level module which depends on filters, and services
 angular.module('qlik', [
 	'qlik.services',
-	'qlik.directives',
-	'qlik.controllers'
-]);
+	'qlik.messagePane',
+	'qlik.messagePoster'
+])
+	.directive('appVersion', ['version', function (version) {
+		return function (scope, elm, attrs) {
+			elm.text(version);
+		};
+	}]);

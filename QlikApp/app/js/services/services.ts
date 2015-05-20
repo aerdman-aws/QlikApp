@@ -1,5 +1,5 @@
-﻿/// <reference path="../../Scripts/typings/angularjs/angular.d.ts" />
-/// <reference path="./typings.d.ts" />
+﻿/// <reference path="../../../Scripts/typings/angularjs/angular.d.ts" />
+/// <reference path="../typings.d.ts" />
 
 'use strict';
 
@@ -82,7 +82,7 @@ class MessageService implements qlik.IMessageService {
 		var url = '';
 		this.api.get(url)
 			.then((result: any) => {
-				var messages: IMessage[] = <qlik.IMessage[]>result;
+				var messages: qlik.IMessage[] = <qlik.IMessage[]>result;
 				deferred.resolve(messages);
 			})
 			.catch((reason: any) => {
@@ -108,13 +108,13 @@ class MessageService implements qlik.IMessageService {
 		return deferred.promise;
 	}
 
-	create(message: IMessage): ng.IPromise<qlik.IMessage> {
+	create(message: qlik.IMessage): ng.IPromise<qlik.IMessage> {
 		var deferred = this.$q.defer<qlik.IMessage>();
 
 		var url = '';
 		this.api.post(url, { Id: message.Id, Body: message.Body })
 			.then((result: any) => {
-				var message: IMessage = <qlik.IMessage>result;
+				var message: qlik.IMessage = <qlik.IMessage>result;
 				deferred.resolve(message);
 			})
 			.catch((reason: any) => {
@@ -130,7 +130,7 @@ class MessageService implements qlik.IMessageService {
 		var url = id.toString();
 		this.api.delete(url)
 			.then((result: any) => {
-				var message: IMessage = <qlik.IMessage>result;
+				var message: qlik.IMessage = <qlik.IMessage>result;
 				deferred.resolve(message);
 			})
 			.catch((reason: any) => {

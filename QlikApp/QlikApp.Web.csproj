@@ -78,12 +78,8 @@
       <DependentUpon>app.scss</DependentUpon>
     </Content>
     <Content Include="index.html" />
-    <Content Include="app\js\app.js" />
-    <Content Include="app\js\controllers.js" />
-    <Content Include="app\js\directives.js" />
-    <Content Include="app\js\services.js" />
-    <Content Include="app\partials\messagePoster.html" />
-    <Content Include="app\partials\messagePane.html" />
+    <Content Include="app\js\messagePoster\messagePoster.html" />
+    <Content Include="app\js\messagePane\messagePane.html" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
@@ -103,10 +99,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="app\css\app.scss" />
-    <Content Include="app\js\app.js.map" />
-    <Content Include="app\js\controllers.js.map" />
-    <Content Include="app\js\directives.js.map" />
-    <Content Include="app\js\services.js.map" />
     <None Include="Properties\PublishProfiles\FileSystem.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -116,13 +108,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\partials\" />
     <Folder Include="WebApi\App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\js\app.ts" />
-    <TypeScriptCompile Include="app\js\controllers.ts" />
-    <TypeScriptCompile Include="app\js\directives.ts" />
-    <TypeScriptCompile Include="app\js\services.ts" />
+    <TypeScriptCompile Include="app\js\messagePane\messagePane.ts" />
+    <TypeScriptCompile Include="app\js\messagePoster\messagePoster.ts" />
+    <TypeScriptCompile Include="app\js\services\services.ts" />
     <TypeScriptCompile Include="app\js\typings.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
