@@ -11,7 +11,7 @@ class MessagePaneDirective implements ng.IDirective {
 
 	scope = {};
 
-	templateUrl = './partials/messagePane.html';
+	templateUrl = './app/partials/messagePane.html';
 	controller = 'MessagePaneController';
 };
 
@@ -21,7 +21,7 @@ class MessagePosterDirective implements ng.IDirective {
 
 	scope = {};
 
-	templateUrl = './partials/messagePoster.html';
+	templateUrl = './app/partials/messagePoster.html';
 	controller = 'MessagePosterController';
 };
 

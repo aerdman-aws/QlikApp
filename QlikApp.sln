@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QlikApp", "QlikApp\QlikApp.csproj", "{61510F7C-89A0-45B8-A9B5-78397C399B47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QlikApp.Web", "QlikApp\QlikApp.Web.csproj", "{61510F7C-89A0-45B8-A9B5-78397C399B47}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsConsole", "AwsConsole\AwsConsole.csproj", "{2ECCA326-DA2E-4B3E-8152-459FF716B7FC}"
 EndProject

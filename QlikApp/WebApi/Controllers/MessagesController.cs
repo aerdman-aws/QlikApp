@@ -1,5 +1,5 @@
-﻿using QlikApp.Converters;
-using QlikApp.Models;
+﻿using QlikApp.Web.WebApi.Converters;
+using QlikApp.Web.WebApi.Models;
 using QlikApp.Services;
 using QlikApp.Services.Messages;
 using System;
@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace QlikApp.Controllers
+namespace QlikApp.Web.WebApi.Controllers
 {
     public class MessagesController : ApiController
     {

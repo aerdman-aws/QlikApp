@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace QlikApp.Models
+namespace QlikApp.Web.WebApi.Models
 {
     public class MessageDetail
     {

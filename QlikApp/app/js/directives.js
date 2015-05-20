@@ -5,7 +5,7 @@
 var MessagePaneDirective = (function () {
     function MessagePaneDirective() {
         this.scope = {};
-        this.templateUrl = './partials/messagePane.html';
+        this.templateUrl = './app/partials/messagePane.html';
         this.controller = 'MessagePaneController';
     }
     MessagePaneDirective.$inject = [];
@@ -15,7 +15,7 @@ var MessagePaneDirective = (function () {
 var MessagePosterDirective = (function () {
     function MessagePosterDirective() {
         this.scope = {};
-        this.templateUrl = './partials/messagePoster.html';
+        this.templateUrl = './app/partials/messagePoster.html';
         this.controller = 'MessagePosterController';
     }
     MessagePosterDirective.$inject = [];

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 
-namespace QlikApp
+namespace QlikApp.Web.WebApi
 {
     public static class WebApiConfig
     {
