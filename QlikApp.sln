@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QlikApp", "QlikApp\QlikApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AwsConsole", "AwsConsole\AwsConsole.csproj", "{2ECCA326-DA2E-4B3E-8152-459FF716B7FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QlikApp.Services", "QlikApp.Services\QlikApp.Services.csproj", "{A8CA29B1-9CD1-42FF-A382-7765932D5FAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QlikApp.Data", "QlikApp.Data\QlikApp.Data.csproj", "{7E22644A-6306-482E-A1DD-6D2F8DAB00DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{2ECCA326-DA2E-4B3E-8152-459FF716B7FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2ECCA326-DA2E-4B3E-8152-459FF716B7FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2ECCA326-DA2E-4B3E-8152-459FF716B7FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8CA29B1-9CD1-42FF-A382-7765932D5FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8CA29B1-9CD1-42FF-A382-7765932D5FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8CA29B1-9CD1-42FF-A382-7765932D5FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8CA29B1-9CD1-42FF-A382-7765932D5FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E22644A-6306-482E-A1DD-6D2F8DAB00DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E22644A-6306-482E-A1DD-6D2F8DAB00DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E22644A-6306-482E-A1DD-6D2F8DAB00DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E22644A-6306-482E-A1DD-6D2F8DAB00DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

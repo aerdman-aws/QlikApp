@@ -1,4 +1,7 @@
-﻿using QlikApp.Models;
+﻿using QlikApp.Converters;
+using QlikApp.Models;
+using QlikApp.Services;
+using QlikApp.Services.Messages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,54 +13,50 @@ namespace QlikApp.Controllers
 {
     public class MessagesController : ApiController
     {
-        private static List<Message> messages = new List<Message>(new[]
-        { 
-            new Message { Id = 1, Body = "Tomato Soup" }, 
-            new Message { Id = 2, Body = "Yo-yo" }, 
-            new Message { Id = 3, Body = "Hammer" } 
-        });
+        public MessagesController()
+        {
+            var serviceFactory = new ServiceFactory();
+            MessageService = serviceFactory.GetMessageService();
+            MessageConverter = new MessageConverter();
+        }
+
+        internal IMessageService MessageService { get; set; }
+        internal MessageConverter MessageConverter { get; set; }
 
         public IEnumerable<Message> GetAll()
         {
-            return messages;
+            return MessageService.GetAll().Select(m => MessageConverter.Convert(m));
         }
 
         public IHttpActionResult Get(int id)
         {
-            var message = messages.FirstOrDefault(m => m.Id == id);
+            var message = MessageService.Get(id);
             if (message == null)
             {
                 return NotFound();
             }
 
-            var messageDetail = new MessageDetail(message);
+            var messageDetail = new MessageDetail(MessageConverter.Convert(message)); //TODO
             return Ok(messageDetail);
         }
 
         public HttpResponseMessage Post([FromBody] Message data)
         {
-            var message = new Message
-            {
-                Id = messages.Max(m => m.Id) + 1,
-                Body = data.Body
-            };
-            messages.Add(message);
+            var message = MessageService.Create(data.Body);
 
-            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, messages);
+            HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, MessageConverter.Convert(message));
             return response;
         }
 
         public IHttpActionResult Delete(int id)
         {
-            var message = messages.FirstOrDefault(m => m.Id == id);
-            if (message == null)
+            var removedMessage = MessageService.Remove(id);
+            if (removedMessage == null)
             {
                 return NotFound();
             }
 
-            messages.Remove(message);
-
-            return Ok(message);
+            return Ok(MessageConverter.Convert(removedMessage));
         }
     }
 }

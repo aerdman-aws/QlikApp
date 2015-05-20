@@ -92,6 +92,7 @@
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Converters\MessageConverter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -125,6 +126,16 @@
     <TypeScriptCompile Include="app\js\typings.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\angularjs\angular.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\QlikApp.Data\QlikApp.Data.csproj">
+      <Project>{7e22644a-6306-482e-a1dd-6d2f8dab00da}</Project>
+      <Name>QlikApp.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\QlikApp.Services\QlikApp.Services.csproj">
+      <Project>{a8ca29b1-9cd1-42ff-a382-7765932d5fab}</Project>
+      <Name>QlikApp.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
