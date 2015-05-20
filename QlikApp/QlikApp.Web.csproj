@@ -108,7 +108,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\partials\" />
     <Folder Include="WebApi\App_Data\" />
   </ItemGroup>
   <ItemGroup>
