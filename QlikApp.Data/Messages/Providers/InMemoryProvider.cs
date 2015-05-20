@@ -9,11 +9,12 @@ namespace QlikApp.Data.Messages.Providers
 {
     public class InMemoryProvider : IMessageProvider
     {
+        private static int ID = 1;
         private static List<Message> messages = new List<Message>(new[]
         { 
-            new Message { Id = 1, Body = "Hello world" },
-            new Message { Id = 2, Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
-            new Message { Id = 3, Body = "Never odd or even" },
+            new Message { Id = ID++, Body = "Hello world" },
+            new Message { Id = ID++, Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
+            new Message { Id = ID++, Body = "Never odd or even" },
         });
 
         public Message Create(Message message)
@@ -24,7 +25,7 @@ namespace QlikApp.Data.Messages.Providers
             }
 
             //generate a unique id for the message
-            message.Id = messages.Max(m => m.Id) + 1;
+            message.Id = ID++;
 
             messages.Add(message);
             return message;
