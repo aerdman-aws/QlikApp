@@ -18,6 +18,9 @@
         .messagePane .container .message:hover .delete:after {
           content: "X";
           color: red; }
+      .messagePane .container .message .body {
+        min-height: 18px;
+        overflow-wrap: break-word; }
       .messagePane .container .message .id {
         font-size: 12px;
         text-align: right; }

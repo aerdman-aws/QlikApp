@@ -36,6 +36,11 @@ $green: rgb(195, 227, 200);
                 }
             }
 
+            .body {
+                min-height: 18px;
+                overflow-wrap: break-word;
+            }
+
             .id {
                 font-size: 12px;
                 text-align: right;
