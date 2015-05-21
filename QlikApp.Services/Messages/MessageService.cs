@@ -11,10 +11,23 @@ namespace QlikApp.Services.Messages
 {
     public class MessageService : IMessageService
     {
+        /// <summary>
+        /// Creates a MessageService with a default message provider
+        /// </summary>
         public MessageService()
         {
             var providerFactory = new ProviderFactory();
             MessageProvider = providerFactory.GetMessageProvider();
+        }
+
+        /// <summary>
+        /// Creates a MessageService with a specific message provider.
+        /// Can be used for unit testing
+        /// </summary>
+        /// <param name="messageProvider">The message provider to be used by the service</param>
+        public MessageService(IMessageProvider messageProvider)
+        {
+            MessageProvider = messageProvider;
         }
 
         protected IMessageProvider MessageProvider { get; set; }
@@ -41,10 +54,10 @@ namespace QlikApp.Services.Messages
 
         public Message Remove(int id)
         {
-            var message = Get(id);
+            var message = Get(id); //find the message to remove, by id
             if (message != null)
             {
-                MessageProvider.Remove(message);
+                MessageProvider.Remove(message); //remove the message
             }
 
             return message;

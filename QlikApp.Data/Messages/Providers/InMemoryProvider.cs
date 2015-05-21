@@ -9,8 +9,8 @@ namespace QlikApp.Data.Messages.Providers
 {
     public class InMemoryProvider : IMessageProvider
     {
-        private static int ID = 1;
-        private static List<Message> messages = new List<Message>(new[]
+        private static int ID = 1; //counter used to determine unique identifiers
+        private static List<Message> messages = new List<Message>(new[] //seed the system with some initial messages
         { 
             new Message { Id = ID++, Body = "Hello world" },
             new Message { Id = ID++, Body = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua." },
@@ -33,7 +33,7 @@ namespace QlikApp.Data.Messages.Providers
 
         public Message Get(int id)
         {
-            return messages.FirstOrDefault(m => m.Id == id);
+            return messages.FirstOrDefault(m => m.Id == id); //find the first message that matches the id
         }
 
         public IEnumerable<Message> GetAll()
