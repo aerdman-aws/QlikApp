@@ -3,16 +3,6 @@
 
 'use strict';
 
-interface IMessagePosterController {
-
-}
-
-interface IMessagePosterScope extends ng.IScope {
-	controller: IMessagePosterController;
-
-	message: qlik.IMessage;
-}
-
 class MessagePosterDirective implements ng.IDirective {
 	static $inject = [];
 	constructor() { }
@@ -23,9 +13,9 @@ class MessagePosterDirective implements ng.IDirective {
 	controller = 'MessagePosterController';
 };
 
-class MessagePosterController implements IMessagePosterController {
+class MessagePosterController implements qlik.IMessagePosterController {
 	static $inject = ['$scope', 'messageService'];
-	constructor(private $scope: IMessagePosterScope, private messageService: qlik.IMessageService) {
+	constructor(private $scope: qlik.IMessagePosterScope, private messageService: qlik.IMessageService) {
 		$scope.controller = this;
 
 		$scope.message = {

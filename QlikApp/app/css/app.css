@@ -12,13 +12,16 @@
       background-color: #c3e3c8; }
       .messagePane .container .message:hover {
         background-color: #a0d3a8; }
+        .messagePane .container .message:hover .info:after {
+          content: "i";
+          color: blue; }
         .messagePane .container .message:hover .delete:after {
           content: "X";
           color: red; }
       .messagePane .container .message .id {
         font-size: 12px;
         text-align: right; }
-      .messagePane .container .message .delete {
+      .messagePane .container .message .info, .messagePane .container .message .delete {
         display: inline;
         float: right;
         clear: both; }

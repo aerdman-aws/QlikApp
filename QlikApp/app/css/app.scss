@@ -21,6 +21,13 @@ $green: rgb(195, 227, 200);
             &:hover {
                 background-color: darken($green, 10%);
 
+                .info {
+                    &:after {
+                        content: "i";
+                        color: blue;
+                    }
+                }
+
                 .delete {
                     &:after {
                         content: "X";
@@ -34,7 +41,7 @@ $green: rgb(195, 227, 200);
                 text-align: right;
             }
 
-            .delete {
+            .info, .delete {
                 display: inline;
                 float: right;
                 clear: both;
@@ -58,9 +65,6 @@ $green: rgb(195, 227, 200);
 
         TEXTAREA {
             width: 95%;
-        }
-
-        INPUT[type="button"] {
         }
     }
 }

@@ -3,19 +3,6 @@
 
 'use strict';
 
-/* Directives */
-
-interface IMessagePaneController {
-	loadDetails(id: number): void;
-	deleteMessage(id: number): void;
-}
-
-interface IMessagePaneScope extends ng.IScope {
-	controller: IMessagePaneController;
-
-	messages: qlik.IMessage[];
-}
-
 class MessagePaneDirective implements ng.IDirective {
 	static $inject = [];
 	constructor() { }
@@ -26,9 +13,9 @@ class MessagePaneDirective implements ng.IDirective {
 	controller = 'MessagePaneController';
 };
 
-class MessagePaneController implements IMessagePaneController {
+class MessagePaneController implements qlik.IMessagePaneController {
 	static $inject = ['$scope', 'messageService'];
-	constructor(private $scope: IMessagePaneScope, private messageService: qlik.IMessageService) {
+	constructor(private $scope: qlik.IMessagePaneScope, private messageService: qlik.IMessageService) {
 		$scope.controller = this;
 
 		this.loadMessages();
@@ -48,7 +35,7 @@ class MessagePaneController implements IMessagePaneController {
 
 	loadDetails(id: number): void {
 		this.messageService.get(id).then((messageDetail: qlik.IMessageDetail) => {
-			alert(messageDetail.Message.Body + ' is ' + (!messageDetail.IsPalindrome ? 'not ' : '') + 'a palindrome');
+			alert('"' + messageDetail.Message.Body + '" is ' + (!messageDetail.IsPalindrome ? 'not ' : '') + 'a palindrome');
 		});
 	}
 

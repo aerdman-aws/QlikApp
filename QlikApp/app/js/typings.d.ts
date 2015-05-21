@@ -23,4 +23,25 @@
 		create(message: IMessage): ng.IPromise<qlik.IMessage>;
 		delete(id: number): ng.IPromise<qlik.IMessage>;
 	}
+
+	interface IMessagePaneController {
+		loadDetails(id: number): void;
+		deleteMessage(id: number): void;
+	}
+
+	interface IMessagePaneScope extends ng.IScope {
+		controller: IMessagePaneController;
+
+		messages: qlik.IMessage[];
+	}
+
+	interface IMessagePosterController {
+
+	}
+
+	interface IMessagePosterScope extends ng.IScope {
+		controller: IMessagePosterController;
+
+		message: qlik.IMessage;
+	}
 }
