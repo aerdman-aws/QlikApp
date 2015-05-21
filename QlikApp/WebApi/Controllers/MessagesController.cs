@@ -36,7 +36,12 @@ namespace QlikApp.Web.WebApi.Controllers
                 return NotFound();
             }
 
-            var messageDetail = new MessageDetail(MessageConverter.Convert(message)); //TODO
+            var messageDetail = new MessageDetail
+            {
+                Message = MessageConverter.Convert(message),
+                IsPalindrome = MessageService.IsPalindrome(message)
+            };
+
             return Ok(messageDetail);
         }
 

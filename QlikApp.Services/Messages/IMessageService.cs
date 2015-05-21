@@ -13,5 +13,7 @@ namespace QlikApp.Services.Messages
         Message Get(int id);
         IEnumerable<Message> GetAll();
         Message Remove(int id);
+
+        bool IsPalindrome(Message message);
     }
 }

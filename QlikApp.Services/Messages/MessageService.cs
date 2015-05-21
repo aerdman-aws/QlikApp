@@ -49,5 +49,16 @@ namespace QlikApp.Services.Messages
 
             return message;
         }
+
+
+        public bool IsPalindrome(Message message)
+        {
+            if(message == null || String.IsNullOrEmpty(message.Body)) {
+                return false;
+            }
+
+            var originalMessage = message.Body.Replace(" ", "").ToLower(); //remove white space and convert to lower case
+            return originalMessage.Equals(new String(originalMessage.Reverse().ToArray())); //compare the original message to the reversed message
+        }
     }
 }
