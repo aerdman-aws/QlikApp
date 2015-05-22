@@ -95,6 +95,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AwsDeployer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="assemblyinfo.cs" />
   </ItemGroup>
@@ -127,5 +128,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AwsConsole.Services\AwsConsole.Services.csproj">
+      <Project>{ae7c5f66-497f-43bd-bfbd-55ca10129beb}</Project>
+      <Name>AwsConsole.Services</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
