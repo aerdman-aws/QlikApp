@@ -25,13 +25,9 @@ namespace AwsConsole
 
         public void DeployQlikAppInstance()
         {
-            var configuration = ConfigurationFactory.GetDeploymentConfiguration();
             try
             {
-                var instanceName = configuration.InstanceName;
-                Console.WriteLine(String.Format("Checking for the '{0}' Amazon EC2 instance running in the {1} region.", instanceName, configuration.AWSRegion));
-
-                var instance = DeploymentService.GetInstanceByName(instanceName);
+                var instance = DeploymentService.GetInstance();
                 if (instance == null)
                 {
                     Console.WriteLine("Instance does not exist. Creating...");
@@ -58,17 +54,15 @@ namespace AwsConsole
                 }
 
                 Console.WriteLine("Ensuring instance is running...");
-                var runningInstance = instance;
-                while (runningInstance != null && runningInstance.State.Code != 16)
+                instance = DeploymentService.WaitForInstanceToStart(instance);
+                if (instance == null)
                 {
-                    Console.WriteLine(String.Format("Instance status: {0} ({1}). Waiting...", runningInstance.State.Name, runningInstance.State.Code));
-                    System.Threading.Thread.Sleep(10 * 1000);
-
-                    runningInstance = DeploymentService.GetInstanceById(instance.InstanceId);
+                    throw new Exception("Instance failed to start");
                 }
+
                 Console.WriteLine("Instance is running!");
                 Console.WriteLine();
-                Console.WriteLine(String.Format("QlikApp can be accessed available at: {0}/qlikapp ", runningInstance.PublicDnsName));
+                Console.WriteLine(String.Format("QlikApp can be accessed available at: {0}/qlikapp ", instance.PublicDnsName));
             }
             catch (AmazonEC2Exception ex)
             {

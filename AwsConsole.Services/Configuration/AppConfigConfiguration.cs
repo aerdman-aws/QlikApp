@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AwsConsole.Services.Configuration
 {
-    public class AppConfigConfiguration : IConfiguration //TODO: interface and rename to AppConfigConfiguration and move .Instance to factory
+    public class AppConfigConfiguration : IConfiguration
     {
         private const string AWSRegionKey = "AWSRegion";
 
@@ -22,8 +22,6 @@ namespace AwsConsole.Services.Configuration
         private const string SecurityGroupDescriptionKey = "QlikAppSecurityGroupDescription";
         private const string SecurityGroupIpRangesKey = "QlikAppSecurityGroupIpRanges";
         private const string SecurityGroupIpPermissionsKey = "QlikAppSecurityGroupIpPermissions";
-
-        private const string SecurityGroupIdKey = "QlikAppSecurityGroupId";
 
         public AppConfigConfiguration()
         {
@@ -115,13 +113,6 @@ namespace AwsConsole.Services.Configuration
             get
             {
                 return ConfigurationManager.AppSettings[SecurityGroupIpPermissionsKey];
-            }
-        }
-
-        public string SecurityGroupId
-        {
-            get {
-                return ConfigurationManager.AppSettings[SecurityGroupIdKey];
             }
         }
     }

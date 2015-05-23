@@ -12,8 +12,8 @@ namespace AwsConsole.Services.Deploy
         SecurityGroup GetSecurityGroup();
         SecurityGroup CreateSecurityGroup();
         
-        Instance GetInstanceByName(string instanceName);
-        Instance GetInstanceById(string instanceId);
+        Instance GetInstance();
         Instance CreateInstance(SecurityGroup securityGroup);
+        Instance WaitForInstanceToStart(Instance instance);
     }
 }

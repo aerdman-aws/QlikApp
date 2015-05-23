@@ -12,6 +12,9 @@ namespace AwsConsole.Services.Deploy
 {
     class DeploymentService : IDeploymentService
     {
+        private const int InstanceState_Pending = 0;
+        private const int InstanceState_Running = 16;
+
         public DeploymentService()
         {
             Configuration = ConfigurationFactory.GetDeploymentConfiguration();
@@ -26,14 +29,13 @@ namespace AwsConsole.Services.Deploy
 
         protected IConfiguration Configuration { get; set; }
         protected IAmazonEC2 EC2Client { get; set; }
-        
+
         public SecurityGroup GetSecurityGroup()
         {
-            var securityGroupId = Configuration.SecurityGroupId;
             var dsgRequest = new DescribeSecurityGroupsRequest();
-            //Filter by name?
+            dsgRequest.GroupNames = new[] { Configuration.SecurityGroupName }.ToList(); //look up group by name
             var dsgResponse = EC2Client.DescribeSecurityGroups(dsgRequest);
-            return dsgResponse.SecurityGroups.FirstOrDefault(sg => sg.GroupId == securityGroupId);
+            return dsgResponse.SecurityGroups.FirstOrDefault();
         }
 
         public SecurityGroup CreateSecurityGroup()
@@ -82,8 +84,10 @@ namespace AwsConsole.Services.Deploy
             return securityGroup;
         }
 
-        public Instance GetInstanceByName(string instanceName)
+        public Instance GetInstance()
         {
+            Console.WriteLine(String.Format("Checking for the '{0}' Amazon EC2 instance running in the {1} region.", Configuration.InstanceName, Configuration.AWSRegion));
+
             DescribeInstancesRequest ec2Request = new DescribeInstancesRequest();
 
             DescribeInstancesResponse ec2Response = EC2Client.DescribeInstances(ec2Request);
@@ -94,27 +98,10 @@ namespace AwsConsole.Services.Deploy
                 from instance in reservation.Instances //check each instance
                 where instance.Tags != null //that has tags
                 let nameTag = instance.Tags.FirstOrDefault(tag => tag.Key == "Name") //find the name tag
-                where nameTag != null && nameTag.Value == instanceName //check the name tag to see if it matches our instanceName
+                where nameTag != null && nameTag.Value == Configuration.InstanceName //check the name tag to see if it matches our instanceName
                 select instance; //return the instance
 
             return instances.FirstOrDefault(); //return the first instance that has a name that matches our instanceName
-        }
-
-        public Instance GetInstanceById(string instanceId)
-        {
-            var instancesRequest = new DescribeInstancesRequest();
-            instancesRequest.InstanceIds = new[] { instanceId }.ToList();
-
-            var statusResponse = EC2Client.DescribeInstances(instancesRequest);
-            if (statusResponse.Reservations != null && statusResponse.Reservations.Any())
-            {
-                if (statusResponse.Reservations[0].Instances != null && statusResponse.Reservations[0].Instances.Any())
-                {
-                    return statusResponse.Reservations[0].Instances[0];
-                }
-            }
-
-            return null;
         }
 
         public Instance CreateInstance(SecurityGroup securityGroup)
@@ -159,6 +146,41 @@ namespace AwsConsole.Services.Deploy
             var createTagsResponse = EC2Client.CreateTags(createTagsRequest);
 
             return instance;
+        }
+
+        public Instance WaitForInstanceToStart(Instance instance)
+        {
+            var runningInstance = instance;
+            while (runningInstance != null && runningInstance.State.Code != InstanceState_Running) //wait until the instance is in the "Running" state
+            {
+                if (runningInstance.State.Code != InstanceState_Pending) //if the state isn't "Running" or "Pending" then something went wrong
+                {
+                    throw new Exception(String.Format("Unexpected instance status: {0} ({1})", runningInstance.State.Name, runningInstance.State.Code));
+                }
+                Console.WriteLine(String.Format("Instance status is {0} ({1}). Waiting...", runningInstance.State.Name, runningInstance.State.Code));
+                System.Threading.Thread.Sleep(10 * 1000);
+
+                runningInstance = getInstanceById(instance.InstanceId);
+            }
+
+            return runningInstance;
+        }
+
+        private Instance getInstanceById(string instanceId)
+        {
+            var instancesRequest = new DescribeInstancesRequest();
+            instancesRequest.InstanceIds = new[] { instanceId }.ToList();
+
+            var statusResponse = EC2Client.DescribeInstances(instancesRequest);
+            if (statusResponse.Reservations != null && statusResponse.Reservations.Any())
+            {
+                if (statusResponse.Reservations[0].Instances != null && statusResponse.Reservations[0].Instances.Any())
+                {
+                    return statusResponse.Reservations[0].Instances[0];
+                }
+            }
+
+            return null;
         }
     }
 }

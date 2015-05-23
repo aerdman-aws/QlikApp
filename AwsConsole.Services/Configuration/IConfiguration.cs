@@ -10,7 +10,6 @@ namespace AwsConsole.Services.Configuration
         string InstanceSubnetId { get; }
         string InstanceType { get; }
         string SecurityGroupDescription { get; }
-        string SecurityGroupId { get; }
         string SecurityGroupIpPermissions { get; }
         string SecurityGroupIpRanges { get; }
         string SecurityGroupName { get; }
