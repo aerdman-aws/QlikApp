@@ -11,11 +11,19 @@ namespace AwsConsole
 {
     class AwsDeployer
     {
+        /// <summary>
+        /// Creates the default AwsDeployer with the default deployment service
+        /// </summary>
         public AwsDeployer()
         {
             DeploymentService = ServiceFactory.GetDeploymentService();
         }
 
+        /// <summary>
+        /// Creates an AwsDeployer with the given deployment service.
+        /// Useful for unit testing
+        /// </summary>
+        /// <param name="deploymentService">The deployment service to use</param>
         public AwsDeployer(IDeploymentService deploymentService)
         {
             DeploymentService = deploymentService;
@@ -27,14 +35,21 @@ namespace AwsConsole
         {
             try
             {
+                //attempt to get the EC2 instance
                 var instance = DeploymentService.GetInstance();
-                if (instance == null)
+
+                //check to see if the instance exists
+                if (instance == null) //instance doesn't exist, will need to create it
                 {
                     Console.WriteLine("Instance does not exist. Creating...");
 
+                    //attempt to get the security group
                     var securityGroup = DeploymentService.GetSecurityGroup();
+                    
+                    //check to see if the security group exists
                     if (securityGroup == null)
                     {
+                        //security group doesn't exist, create it
                         securityGroup = DeploymentService.CreateSecurityGroup();
                         if (securityGroup == null)
                         {
@@ -42,17 +57,19 @@ namespace AwsConsole
                         }
                     }
 
+                    //create the instance using the security group
                     instance = DeploymentService.CreateInstance(securityGroup);
                     if (instance == null)
                     {
                         throw new Exception("Failed to create instance");
                     }
                 }
-                else
+                else //instance already exists
                 {
                     Console.WriteLine("Instance already exists");
                 }
 
+                //make sure the instance is running
                 Console.WriteLine("Ensuring instance is running...");
                 instance = DeploymentService.WaitForInstanceToStart(instance);
                 if (instance == null)

@@ -15,12 +15,21 @@ namespace AwsConsole.Services.Deploy
         private const int InstanceState_Pending = 0;
         private const int InstanceState_Running = 16;
 
+        /// <summary>
+        /// Creates the default DeploymentService with the default configuration
+        /// </summary>
         public DeploymentService()
         {
             Configuration = ConfigurationFactory.GetDeploymentConfiguration();
             EC2Client = AWSClientFactory.CreateAmazonEC2Client();
         }
 
+        /// <summary>
+        /// Creates a DeploymentService with the given configuration and ec2Client.
+        /// Useful for unit testing
+        /// </summary>
+        /// <param name="configuration">The configuration to use</param>
+        /// <param name="ec2Client">The EC2 Client to use</param>
         public DeploymentService(IConfiguration configuration, IAmazonEC2 ec2Client)
         {
             Configuration = configuration;
@@ -33,9 +42,8 @@ namespace AwsConsole.Services.Deploy
         public SecurityGroup GetSecurityGroup()
         {
             var dsgRequest = new DescribeSecurityGroupsRequest();
-            dsgRequest.GroupNames = new[] { Configuration.SecurityGroupName }.ToList(); //look up group by name
             var dsgResponse = EC2Client.DescribeSecurityGroups(dsgRequest);
-            return dsgResponse.SecurityGroups.FirstOrDefault();
+            return dsgResponse.SecurityGroups.FirstOrDefault(sg => sg.GroupName == Configuration.SecurityGroupName); //look up group by name
         }
 
         public SecurityGroup CreateSecurityGroup()
@@ -158,7 +166,7 @@ namespace AwsConsole.Services.Deploy
                     throw new Exception(String.Format("Unexpected instance status: {0} ({1})", runningInstance.State.Name, runningInstance.State.Code));
                 }
                 Console.WriteLine(String.Format("Instance status is {0} ({1}). Waiting...", runningInstance.State.Name, runningInstance.State.Code));
-                System.Threading.Thread.Sleep(10 * 1000);
+                System.Threading.Thread.Sleep(10 * 1000); //wait for 10 seconds before checking the state again
 
                 runningInstance = getInstanceById(instance.InstanceId);
             }
@@ -169,7 +177,7 @@ namespace AwsConsole.Services.Deploy
         private Instance getInstanceById(string instanceId)
         {
             var instancesRequest = new DescribeInstancesRequest();
-            instancesRequest.InstanceIds = new[] { instanceId }.ToList();
+            instancesRequest.InstanceIds = new[] { instanceId }.ToList(); //specify which instance id to search for
 
             var statusResponse = EC2Client.DescribeInstances(instancesRequest);
             if (statusResponse.Reservations != null && statusResponse.Reservations.Any())
