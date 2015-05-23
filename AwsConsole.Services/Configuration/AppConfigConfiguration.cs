@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AwsConsole.Services.Deploy
+namespace AwsConsole.Services.Configuration
 {
-    public class Configuration //TODO: interface and rename to AppConfigConfiguration and move .Instance to factory
+    public class AppConfigConfiguration : IConfiguration //TODO: interface and rename to AppConfigConfiguration and move .Instance to factory
     {
         private const string AWSRegionKey = "AWSRegion";
 
@@ -25,19 +25,9 @@ namespace AwsConsole.Services.Deploy
 
         private const string SecurityGroupIdKey = "QlikAppSecurityGroupId";
 
-        private static Configuration instance = new Configuration();
-
-        private Configuration()
+        public AppConfigConfiguration()
         {
 
-        }
-
-        public static Configuration Instance
-        {
-            get
-            {
-                return instance;
-            }
         }
 
         public string AWSRegion

@@ -25,15 +25,16 @@ namespace AwsConsole
 
         public void DeployQlikAppInstance()
         {
+            var configuration = ConfigurationFactory.GetDeploymentConfiguration();
             try
             {
-                var instanceName = Configuration.Instance.InstanceName;
-                Console.WriteLine(String.Format("Checking for the '{0}' Amazon EC2 instance running in the {1} region.", instanceName, Configuration.Instance.AWSRegion));
+                var instanceName = configuration.InstanceName;
+                Console.WriteLine(String.Format("Checking for the '{0}' Amazon EC2 instance running in the {1} region.", instanceName, configuration.AWSRegion));
 
                 var instance = DeploymentService.GetInstanceByName(instanceName);
                 if (instance == null)
                 {
-                    Console.WriteLine(String.Format("Instance does not exist. Creating...", instanceName));
+                    Console.WriteLine("Instance does not exist. Creating...");
 
                     var securityGroup = DeploymentService.GetSecurityGroup();
                     if (securityGroup == null)
@@ -53,10 +54,10 @@ namespace AwsConsole
                 }
                 else
                 {
-                    Console.WriteLine(String.Format("Instance already exists", instanceName));
+                    Console.WriteLine("Instance already exists");
                 }
 
-                Console.WriteLine(String.Format("Ensuring instance is running...", instanceName));
+                Console.WriteLine("Ensuring instance is running...");
                 var runningInstance = instance;
                 while (runningInstance != null && runningInstance.State.Code != 16)
                 {
@@ -67,7 +68,7 @@ namespace AwsConsole
                 }
                 Console.WriteLine("Instance is running!");
                 Console.WriteLine();
-                Console.WriteLine(String.Format("QlikApp can be accessed available at: {0}/qlikapp ",runningInstance.PublicDnsName));
+                Console.WriteLine(String.Format("QlikApp can be accessed available at: {0}/qlikapp ", runningInstance.PublicDnsName));
             }
             catch (AmazonEC2Exception ex)
             {

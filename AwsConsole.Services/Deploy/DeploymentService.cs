@@ -1,6 +1,7 @@
 ﻿using Amazon;
 using Amazon.EC2;
 using Amazon.EC2.Model;
+using AwsConsole.Services.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,22 @@ namespace AwsConsole.Services.Deploy
     {
         public DeploymentService()
         {
+            Configuration = ConfigurationFactory.GetDeploymentConfiguration();
             EC2Client = AWSClientFactory.CreateAmazonEC2Client();
         }
 
+        public DeploymentService(IConfiguration configuration, IAmazonEC2 ec2Client)
+        {
+            Configuration = configuration;
+            EC2Client = ec2Client;
+        }
+
+        protected IConfiguration Configuration { get; set; }
         protected IAmazonEC2 EC2Client { get; set; }
         
         public SecurityGroup GetSecurityGroup()
         {
-            var securityGroupId = Configuration.Instance.SecurityGroupId;
+            var securityGroupId = Configuration.SecurityGroupId;
             var dsgRequest = new DescribeSecurityGroupsRequest();
             //Filter by name?
             var dsgResponse = EC2Client.DescribeSecurityGroups(dsgRequest);
@@ -32,9 +41,9 @@ namespace AwsConsole.Services.Deploy
             //Setup a new security group
             var newSGRequest = new CreateSecurityGroupRequest()
             {
-                GroupName = Configuration.Instance.SecurityGroupName,
-                Description = Configuration.Instance.SecurityGroupDescription,
-                VpcId = Configuration.Instance.VpcId
+                GroupName = Configuration.SecurityGroupName,
+                Description = Configuration.SecurityGroupDescription,
+                VpcId = Configuration.VpcId
             };
             var csgResponse = EC2Client.CreateSecurityGroup(newSGRequest);
             Console.WriteLine("Created new security group: " + csgResponse.GroupId);
@@ -46,8 +55,8 @@ namespace AwsConsole.Services.Deploy
             var securityGroup = newSgResponse.SecurityGroups[0];
 
             //Setup permissions for the security group
-            var ipRanges = Configuration.Instance.SecurityGroupIpRanges.Split(',').ToList();
-            var permissions = Configuration.Instance.SecurityGroupIpPermissions.Split(',');
+            var ipRanges = Configuration.SecurityGroupIpRanges.Split(',').ToList();
+            var permissions = Configuration.SecurityGroupIpPermissions.Split(',');
 
             var ipPermissions = permissions.Select(p =>
             {
@@ -115,7 +124,7 @@ namespace AwsConsole.Services.Deploy
             var eni = new InstanceNetworkInterfaceSpecification()
             {
                 DeviceIndex = 0,
-                SubnetId = Configuration.Instance.InstanceSubnetId,
+                SubnetId = Configuration.InstanceSubnetId,
                 Groups = groups,
                 AssociatePublicIpAddress = true
             };
@@ -124,11 +133,11 @@ namespace AwsConsole.Services.Deploy
             //Setup the request for the new instance
             var launchRequest = new RunInstancesRequest()
             {
-                ImageId = Configuration.Instance.InstanceImageId,
-                InstanceType = Configuration.Instance.InstanceType,
+                ImageId = Configuration.InstanceImageId,
+                InstanceType = Configuration.InstanceType,
                 MinCount = 1,
                 MaxCount = 1,
-                KeyName = Configuration.Instance.InstanceKeyPairName,
+                KeyName = Configuration.InstanceKeyPairName,
                 NetworkInterfaces = enis,
             };
 
@@ -145,7 +154,7 @@ namespace AwsConsole.Services.Deploy
             var createTagsRequest = new CreateTagsRequest()
             {
                 Resources = new[] { instance.InstanceId }.ToList(),
-                Tags = new[] { new Tag("Name", Configuration.Instance.InstanceName) }.ToList()
+                Tags = new[] { new Tag("Name", Configuration.InstanceName) }.ToList()
             };
             var createTagsResponse = EC2Client.CreateTags(createTagsRequest);
 
