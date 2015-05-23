@@ -13,7 +13,7 @@ class MessageApiService implements qlik.IMessageApiService {
 	get(apiUrl: string): ng.IPromise<any> {
 		var deferred = this.$q.defer<any>();
 
-		var url: string = '../api/messages/' + apiUrl;
+		var url: string = 'api/messages/' + apiUrl;
 
 		this.$log.debug('Request: ', url);
 
@@ -33,7 +33,7 @@ class MessageApiService implements qlik.IMessageApiService {
 	post(apiUrl: string, data: any): ng.IPromise<any> {
 		var deferred = this.$q.defer<any>();
 
-		var url: string = '../api/messages/' + apiUrl;
+		var url: string = 'api/messages/' + apiUrl;
 
 		this.$log.debug('Request: ', url);
 
@@ -53,7 +53,7 @@ class MessageApiService implements qlik.IMessageApiService {
 	delete(apiUrl: string): ng.IPromise<any> {
 		var deferred = this.$q.defer<any>();
 
-		var url: string = '../api/messages/' + apiUrl;
+		var url: string = 'api/messages/' + apiUrl;
 
 		this.$log.debug('Request: ', url);
 
