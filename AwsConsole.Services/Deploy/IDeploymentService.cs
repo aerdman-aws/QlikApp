@@ -9,9 +9,11 @@ namespace AwsConsole.Services.Deploy
 {
     public interface IDeploymentService
     {
-        void GetInstances();
         SecurityGroup GetSecurityGroup();
         SecurityGroup CreateSecurityGroup();
-        void CreateInstance(SecurityGroup mySG);
+        
+        Instance GetInstanceByName(string instanceName);
+        Instance GetInstanceById(string instanceId);
+        Instance CreateInstance(SecurityGroup securityGroup);
     }
 }

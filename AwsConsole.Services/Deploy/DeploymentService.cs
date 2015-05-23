@@ -3,7 +3,6 @@ using Amazon.EC2;
 using Amazon.EC2.Model;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,152 +17,139 @@ namespace AwsConsole.Services.Deploy
         }
 
         protected IAmazonEC2 EC2Client { get; set; }
-
-        public void GetInstances()
-        {
-            DescribeInstancesRequest ec2Request = new DescribeInstancesRequest();
-
-            DescribeInstancesResponse ec2Response = EC2Client.DescribeInstances(ec2Request);
-            int numInstances = 0;
-            numInstances = ec2Response.Reservations.Count;
-            Console.WriteLine(string.Format("You have {0} Amazon EC2 instance(s) running in the {1} region.", numInstances, ConfigurationManager.AppSettings["AWSRegion"]));
-
-            //TODO: ensure instance exists by name
-            //TODO: ensure instance is running
-        }
-
+        
         public SecurityGroup GetSecurityGroup()
         {
-            var mySGId = "sg-010d1464"; //TODO: move to configuration
-            SecurityGroup mySG = null;
-
+            var securityGroupId = Configuration.Instance.SecurityGroupId;
             var dsgRequest = new DescribeSecurityGroupsRequest();
+            //Filter by name?
             var dsgResponse = EC2Client.DescribeSecurityGroups(dsgRequest);
-            List<SecurityGroup> mySGs = dsgResponse.SecurityGroups;
-
-            foreach (SecurityGroup sg in mySGs)
-            {
-                Console.WriteLine(String.Format("Existing security group: {0} ({1}) - {2}", sg.GroupName, sg.GroupId, sg.VpcId));
-                if (sg.GroupId == mySGId)
-                {
-                    mySG = sg;
-                }
-            }
-
-            return mySG;
+            return dsgResponse.SecurityGroups.FirstOrDefault(sg => sg.GroupId == securityGroupId);
         }
 
         public SecurityGroup CreateSecurityGroup()
         {
-            //TODO: store in configuration object that is injected, can be saved/loaded from DB or config file
-            const string vpcId = "vpc-96ab29f3";
-            const string securityGroupName = "qlik-demo-security-group";
-
+            //Setup a new security group
             var newSGRequest = new CreateSecurityGroupRequest()
             {
-                GroupName = securityGroupName,
-                Description = "Security group for Qlik Demo",
-                VpcId = vpcId
+                GroupName = Configuration.Instance.SecurityGroupName,
+                Description = Configuration.Instance.SecurityGroupDescription,
+                VpcId = Configuration.Instance.VpcId
             };
             var csgResponse = EC2Client.CreateSecurityGroup(newSGRequest);
-            Console.WriteLine();
-            Console.WriteLine("New security group: " + csgResponse.GroupId);
+            Console.WriteLine("Created new security group: " + csgResponse.GroupId);
 
-            List<string> Groups = new List<string>() { csgResponse.GroupId };
-            var newSgRequest = new DescribeSecurityGroupsRequest() { GroupIds = Groups };
+            //Get the new security group
+            var newSgRequest = new DescribeSecurityGroupsRequest() { GroupIds = new[] { csgResponse.GroupId }.ToList() };
             var newSgResponse = EC2Client.DescribeSecurityGroups(newSgRequest);
-
-            //TODO: error handling
-            var mySG = newSgResponse.SecurityGroups[0];
             
-            List<string> ranges = new List<string>() { "0.0.0.0/0" };
-            var rdpPermission = new IpPermission()
-            {
-                IpProtocol = "tcp",
-                FromPort = 3389,
-                ToPort = 3389,
-                IpRanges = ranges
-            };
-            var httpPermission = new IpPermission()
-            {
-                IpProtocol = "tcp",
-                FromPort = 80,
-                ToPort = 80,
-                IpRanges = ranges
-            };
+            var securityGroup = newSgResponse.SecurityGroups[0];
 
+            //Setup permissions for the security group
+            var ipRanges = Configuration.Instance.SecurityGroupIpRanges.Split(',').ToList();
+            var permissions = Configuration.Instance.SecurityGroupIpPermissions.Split(',');
+
+            var ipPermissions = permissions.Select(p =>
+            {
+                var protocol = p.Substring(0, 3);
+                var port = int.Parse(p.Substring(3));
+                return new IpPermission()
+                {
+                    IpProtocol = protocol,
+                    FromPort = port,
+                    ToPort = port,
+                    IpRanges = ipRanges
+                };
+            });
+
+            //Set the permissions on the security group
             var ingressRequest = new AuthorizeSecurityGroupIngressRequest();
-            ingressRequest.GroupId = mySG.GroupId;
-            ingressRequest.IpPermissions.Add(rdpPermission);
-            ingressRequest.IpPermissions.Add(httpPermission);
+            ingressRequest.GroupId = securityGroup.GroupId;
+            ingressRequest.IpPermissions = ipPermissions.ToList();
 
             var ingressResponse = EC2Client.AuthorizeSecurityGroupIngress(ingressRequest);
-            Console.WriteLine("Add permissions to security group: " + ingressResponse.HttpStatusCode); //TODO: check status code for error
+            Console.WriteLine("Added permissions to security group: " + ingressResponse.HttpStatusCode);
 
-            return mySG;
+            return securityGroup;
         }
 
-        public void CreateInstance(SecurityGroup mySG)
+        public Instance GetInstanceByName(string instanceName)
         {
-            //TODO: store in configuration object that is injected, can be saved/loaded from DB or config file
-            const string subnetID = "subnet-4e54ce2b";
-            const string amiID = "ami-c5bf8df5"; //custom image
-            //"ami-63e89b53"; //Windows 2012 + IIS8 "ami-95d3f9a5"; //Windows 2012 + SQL
-            const string keyPairName = "Ariel1";
+            DescribeInstancesRequest ec2Request = new DescribeInstancesRequest();
 
-            List<string> groups = new List<string>() { mySG.GroupId };
+            DescribeInstancesResponse ec2Response = EC2Client.DescribeInstances(ec2Request);
+
+            var instances =
+                from reservation in ec2Response.Reservations //check each reservation
+                where reservation.Instances != null //that has instances
+                from instance in reservation.Instances //check each instance
+                where instance.Tags != null //that has tags
+                let nameTag = instance.Tags.FirstOrDefault(tag => tag.Key == "Name") //find the name tag
+                where nameTag != null && nameTag.Value == instanceName //check the name tag to see if it matches our instanceName
+                select instance; //return the instance
+
+            return instances.FirstOrDefault(); //return the first instance that has a name that matches our instanceName
+        }
+
+        public Instance GetInstanceById(string instanceId)
+        {
+            var instancesRequest = new DescribeInstancesRequest();
+            instancesRequest.InstanceIds = new[] { instanceId }.ToList();
+
+            var statusResponse = EC2Client.DescribeInstances(instancesRequest);
+            if (statusResponse.Reservations != null && statusResponse.Reservations.Any())
+            {
+                if (statusResponse.Reservations[0].Instances != null && statusResponse.Reservations[0].Instances.Any())
+                {
+                    return statusResponse.Reservations[0].Instances[0];
+                }
+            }
+
+            return null;
+        }
+
+        public Instance CreateInstance(SecurityGroup securityGroup)
+        {
+            //Setup the network interface for the instance
+            List<string> groups = new List<string>() { securityGroup.GroupId };
             var eni = new InstanceNetworkInterfaceSpecification()
             {
                 DeviceIndex = 0,
-                SubnetId = subnetID,
+                SubnetId = Configuration.Instance.InstanceSubnetId,
                 Groups = groups,
                 AssociatePublicIpAddress = true
             };
             List<InstanceNetworkInterfaceSpecification> enis = new List<InstanceNetworkInterfaceSpecification>() { eni };
 
+            //Setup the request for the new instance
             var launchRequest = new RunInstancesRequest()
             {
-                ImageId = amiID,
-                InstanceType = "t2.micro",
+                ImageId = Configuration.Instance.InstanceImageId,
+                InstanceType = Configuration.Instance.InstanceType,
                 MinCount = 1,
                 MaxCount = 1,
-                KeyName = keyPairName,
+                KeyName = Configuration.Instance.InstanceKeyPairName,
                 NetworkInterfaces = enis,
             };
 
+            //Request the new instance
             var launchResponse = EC2Client.RunInstances(launchRequest);
-            List<Instance> instances = launchResponse.Reservation.Instances;
-            List<String> instanceIds = new List<string>();
-            foreach (Instance item in instances)
+            var instance = launchResponse.Reservation.Instances.FirstOrDefault();
+            if (instance == null)
             {
-                instanceIds.Add(item.InstanceId);
-                Console.WriteLine();
-                Console.WriteLine("New instance: " + item.InstanceId);
+                throw new Exception("Failed to create instance: " + launchResponse.HttpStatusCode);
             }
+            Console.WriteLine("New instance created: " + instance.InstanceId);
 
+            //Create a Name tag for the new instance
             var createTagsRequest = new CreateTagsRequest()
             {
-                Resources = instanceIds,
-                Tags = new[] { new Tag("Name", "QlikDemo") }.ToList()
+                Resources = new[] { instance.InstanceId }.ToList(),
+                Tags = new[] { new Tag("Name", Configuration.Instance.InstanceName) }.ToList()
             };
             var createTagsResponse = EC2Client.CreateTags(createTagsRequest);
 
-            while (true)
-            {
-                var instancesRequest = new DescribeInstancesRequest();
-                instancesRequest.InstanceIds = instanceIds;
-
-                var statusResponse = EC2Client.DescribeInstances(instancesRequest);
-                var runningInstance = statusResponse.Reservations[0].Instances[0];
-
-                if (runningInstance.State.Code == 16)
-                {
-                    Console.WriteLine("Instance is now available at: " + runningInstance.PublicDnsName);
-                    break;
-                }
-                Console.WriteLine(String.Format("Instance status: {0} ({1})", runningInstance.State.Name, runningInstance.State.Code));
-                System.Threading.Thread.Sleep(10 * 1000);
-            }
+            return instance;
         }
     }
 }

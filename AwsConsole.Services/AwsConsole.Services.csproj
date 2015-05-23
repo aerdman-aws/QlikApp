@@ -43,11 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\AwsCommand.cs" />
-    <Compile Include="Commands\GetOrCreateSecurityGroupCommand.cs" />
-    <Compile Include="Commands\CreateSecurityGroupCommand.cs" />
-    <Compile Include="Commands\GetSecurityGroupCommand.cs" />
-    <Compile Include="Constants.cs" />
+    <Compile Include="Deploy\Configuration.cs" />
     <Compile Include="Deploy\DeploymentService.cs" />
     <Compile Include="Deploy\IDeploymentService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
